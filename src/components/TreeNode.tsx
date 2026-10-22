@@ -1,5 +1,6 @@
-import { useState } from 'react';
-import type { FsEntry } from '../lib/types';
+import { useEffect, useState } from 'react';
+import { isLargeFile } from '../lib/format';
+import type { FileEntry, FsEntry } from '../lib/types';
 
 interface TreeNodeProps {
   entry: FsEntry;
@@ -9,6 +10,25 @@ interface TreeNodeProps {
 }
 
 type Children = { status: 'idle' } | { status: 'loading' } | { status: 'error'; message: string } | { status: 'ready'; items: FsEntry[] };
+
+function LargeTag({ entry }: { entry: FileEntry }) {
+  const [large, setLarge] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+    entry
+      .getFile()
+      .then((file) => {
+        if (!cancelled) setLarge(isLargeFile(file.size));
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+  }, [entry]);
+
+  return large ? <span className="large-tag">LARGE</span> : null;
+}
 
 export function TreeNode({ entry, selectedPath, onSelect, defaultExpanded = false }: TreeNodeProps) {
   const [expanded, setExpanded] = useState(false);
@@ -66,6 +86,7 @@ export function TreeNode({ entry, selectedPath, onSelect, defaultExpanded = fals
             {isDirectory ? '📁' : '📄'}
           </span>
           <span className="row-name">{entry.name || '(unnamed)'}</span>
+          {entry.kind === 'file' && <LargeTag entry={entry} />}
         </button>
       </div>
 

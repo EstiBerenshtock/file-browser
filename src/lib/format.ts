@@ -1,5 +1,12 @@
 const UNITS = ['B', 'KB', 'MB', 'GB', 'TB'];
 
+/** Files bigger than this (10 MB) get a LARGE tag in the tree. */
+export const LARGE_FILE_BYTES = 10 * 1024 * 1024;
+
+export function isLargeFile(bytes: number): boolean {
+  return bytes > LARGE_FILE_BYTES;
+}
+
 export function formatSize(bytes: number): string {
   if (!Number.isFinite(bytes) || bytes < 0) return '—';
   let value = bytes;
