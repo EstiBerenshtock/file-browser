@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, type KeyboardEvent } from 'react';
 import { isLargeFile } from '../lib/format';
 import type { FileEntry, FsEntry } from '../lib/types';
 
@@ -61,6 +61,44 @@ export function TreeNode({ entry, selectedPath, onSelect, defaultExpanded = fals
   const isDirectory = entry.kind === 'directory';
   const selected = selectedPath === entry.path;
 
+  // Enter is not handled here: it already clicks the focused row button, which selects the entry.
+  const onKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
+    const row = event.currentTarget;
+    const labels = Array.from(
+      row.closest('[role="tree"]')?.querySelectorAll<HTMLButtonElement>('.row-label') ?? [],
+    );
+    const label = row.querySelector<HTMLButtonElement>('.row-label');
+    const index = label ? labels.indexOf(label) : -1;
+    if (index === -1) return;
+
+    switch (event.key) {
+      case 'ArrowDown':
+        labels[index + 1]?.focus();
+        break;
+      case 'ArrowUp':
+        labels[index - 1]?.focus();
+        break;
+      case 'ArrowRight':
+        if (!isDirectory) break;
+        if (!expanded) toggle();
+        else labels[index + 1]?.focus();
+        break;
+      case 'ArrowLeft':
+        if (isDirectory && expanded) {
+          toggle();
+        } else {
+          row
+            .closest('ul[role="group"]')
+            ?.parentElement?.querySelector<HTMLButtonElement>(':scope > .row .row-label')
+            ?.focus();
+        }
+        break;
+      default:
+        return;
+    }
+    event.preventDefault();
+  };
+
   return (
     <li role="none">
       <div
@@ -68,11 +106,13 @@ export function TreeNode({ entry, selectedPath, onSelect, defaultExpanded = fals
         role="treeitem"
         aria-selected={selected}
         aria-expanded={isDirectory ? expanded : undefined}
+        onKeyDown={onKeyDown}
       >
         {isDirectory ? (
           <button
             type="button"
             className="disclosure"
+            tabIndex={-1}
             aria-label={expanded ? `Collapse ${entry.name}` : `Expand ${entry.name}`}
             onClick={toggle}
           >
