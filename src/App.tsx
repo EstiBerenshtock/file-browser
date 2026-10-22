@@ -6,6 +6,8 @@ import type { DirectoryEntry, FsEntry } from './lib/types';
 
 export function App() {
   const [root, setRoot] = useState<DirectoryEntry | null>(null);
+  // Changes on every pick so the tree remounts and never shows a previous folder's cached contents.
+  const [pickCount, setPickCount] = useState(0);
   const [selected, setSelected] = useState<FsEntry | null>(null);
   const [error, setError] = useState<string | null>(null);
   const fallbackInput = useRef<HTMLInputElement>(null);
@@ -13,6 +15,7 @@ export function App() {
   const open = (entry: DirectoryEntry | null) => {
     if (!entry) return;
     setRoot(entry);
+    setPickCount((count) => count + 1);
     setSelected(entry);
     setError(null);
   };
@@ -60,6 +63,7 @@ export function App() {
           {root ? (
             <ul className="tree" role="tree">
               <TreeNode
+                key={pickCount}
                 entry={root}
                 selectedPath={selected?.path ?? null}
                 onSelect={setSelected}
