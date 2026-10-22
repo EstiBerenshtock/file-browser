@@ -267,3 +267,12 @@ body {
   padding: var(--space-2) var(--space-3);
   color: var(--color-error);
 }
+
+.name-filter-list {
+  color: var(--color-text);
+  transition: opacity 0.2s;
+}
+
+.name-filter-stale {
+  opacity: 0.5;
+}
