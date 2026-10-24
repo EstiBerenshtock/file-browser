@@ -204,6 +204,13 @@ body {
   white-space: nowrap;
 }
 
+.row-size {
+  flex: none;
+  margin-left: auto;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-small);
+}
+
 .large-tag {
   flex: none;
   padding: 0 var(--space-1);
