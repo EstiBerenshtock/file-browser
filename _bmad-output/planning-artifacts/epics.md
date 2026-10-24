@@ -97,6 +97,12 @@ NFR3: Epic 1, Stories 1.1, 1.2 and 1.3
 
 Sarah, a video editor, can open a folder of clips, select them, see each clip's duration, and watch or listen to it in the app. She never needs the operating system's file explorer or an outside player. The app stays fast and never freezes on a bad file.
 
+### Known Risks
+
+- **MOV codec support differs by browser.** MOV is a supported type, but a browser may not decode every MOV file (for example some Chromium builds with certain codecs). Such a file shows "This file can't be played" (FR13), even though its type is supported. This is accepted for v2. There is no transcoding and no extra library. If it hurts in real use, add a note to the PRD and re-plan.
+- **`Loading...` can stay forever (accepted edge case).** If the media element never fires `loadedmetadata` or `error`, the Duration row stays on `Loading...`. This is accepted on purpose (Architecture Spine, Deferred): files are local, so reads are not expected to stall. v2 has no timeout. The file stays selectable and the app stays responsive, so FR17 still holds.
+- **React UI behavior has no automated tests.** Vitest runs in the `node` environment and only for `src/**/*.test.ts`, so component behavior (stop on switch, late events, messages, announcements) is checked by hand. Stories 1.2 and 1.3 each end with a manual verification list. The pure logic in `media.ts` and `duration.ts` stays covered by automated tests.
+
 ### Story 1.1: Recognise media files and show clear messages for unsupported ones
 
 As Sarah, a video editor,
@@ -197,6 +203,18 @@ So that I can watch or listen to a clip without leaving the app.
 **Then** it sits in the existing `.preview` box with the media element set to `color-scheme: light dark`
 **And** no new colours, sizes or radii are added
 
+**Given** the React behavior of this story cannot be covered by `*.test.ts` (see Known Risks)
+**When** the story is finished, before it is set to `review`
+**Then** the developer runs these manual checks in the browser and records the result in the story file:
+**And** M1: select an MP4, then press play. Select another file. The sound and picture stop at once.
+**And** M2: select an MP3, then press play. Select another file. The sound stops at once.
+**And** M3: select a damaged MP4 (for example a renamed text file). "This file can't be played" shows in the error colour, and the next file still opens normally.
+**And** M4: select a file and watch the browser's network tab. There is no network request for the file.
+**And** M5: select a file, then press Tab. Focus moves into the player. Select with the arrow keys. Focus stays on the tree row.
+**And** M6: a file never starts playing by itself.
+**And** M7: switch the system between light and dark mode. The player controls follow it.
+**And** M8: select 10 files quickly one after another. Only the last one shows, and no old file's state appears on it.
+
 ### Story 1.3: Show the duration in the details pane
 
 As Sarah, a video editor,
@@ -253,3 +271,15 @@ So that I can tell a 2-second bad take from a 5-minute full take without playing
 **Then** the app stays responsive while durations are read
 **And** reading starts only on selection, and the tree does no duration work
 **And** the row uses the existing `.meta` styling (label muted, value normal) with no new colours
+
+**Given** the React behavior of this story cannot be covered by `*.test.ts` (see Known Risks)
+**When** the story is finished, before it is set to `review`
+**Then** the developer runs these manual checks in the browser and records the result in the story file:
+**And** M1: select a known 15.9 second clip. Duration shows `Loading...` first, then `0:15`.
+**And** M2: select a 5 minute clip. Duration shows `5:00`.
+**And** M3: select a damaged supported file. Duration shows `Unknown`, and name and size are still shown.
+**And** M4: select clip A, then clip B at once while A still shows `Loading...`. Only B's value shows, never A's.
+**And** M5: select an unsupported file such as MKV. There is no Duration row.
+**And** M6: the Duration row sits right after Type, and its look matches the other rows in light and dark mode.
+**And** M7: with a screen reader (or the browser's accessibility tree), the Duration change from `Loading...` to the value is announced politely.
+**And** M8: open a folder with many large clips and select several in a row. The app stays responsive.
