@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { formatDate, formatSize, isImage } from '../lib/format';
 import { readImageDetails, type ImageDetails } from '../lib/imageDetails';
+import { classifyMedia, UNSUPPORTED_MEDIA_MESSAGE, type MediaKind } from '../lib/media';
 import { getFileMetadata } from '../lib/metadata';
 import type { FileMetadata, FsEntry } from '../lib/types';
 
@@ -12,6 +13,7 @@ interface Loaded {
   previewUrl: string | null;
   metadata: FileMetadata;
   image: ImageDetails | null;
+  media: MediaKind;
 }
 
 type State = { status: 'loading' } | { status: 'error'; message: string } | { status: 'ready'; loaded: Loaded };
@@ -30,7 +32,7 @@ export function DetailsPane({ entry }: DetailsPaneProps) {
       if (cancelled) return;
       // A temporary in-memory URL; nothing leaves the browser.
       if (image) previewUrl = URL.createObjectURL(file);
-      setState({ status: 'ready', loaded: { previewUrl, metadata: getFileMetadata(file), image } });
+      setState({ status: 'ready', loaded: { previewUrl, metadata: getFileMetadata(file), image, media: classifyMedia(file.name, file.type) } });
     })().catch((e: unknown) => {
       if (!cancelled) setState({ status: 'error', message: e instanceof Error ? e.message : 'Could not read this file.' });
     });
@@ -56,13 +58,20 @@ export function DetailsPane({ entry }: DetailsPaneProps) {
   if (state.status === 'loading') return <p className="empty">Loading…</p>;
   if (state.status === 'error') return <p className="error">{state.message}</p>;
 
-  const { previewUrl, metadata, image } = state.loaded;
+  const { previewUrl, metadata, image, media } = state.loaded;
   return (
     <div className="details-body">
       <h2 className="details-title">{metadata.name}</h2>
       {previewUrl && (
         <div className="preview">
           <img src={previewUrl} alt={metadata.name} />
+        </div>
+      )}
+      {media === 'unsupported-media' && (
+        <div className="preview">
+          <p className="empty" role="status">
+            {UNSUPPORTED_MEDIA_MESSAGE}
+          </p>
         </div>
       )}
       <dl className="meta">
