@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { formatDate, formatSize, isImage } from '../lib/format';
 import { readImageDetails, type ImageDetails } from '../lib/imageDetails';
 import { classifyMedia, UNSUPPORTED_MEDIA_MESSAGE, type MediaKind } from '../lib/media';
+import { MediaPlayer } from './MediaPlayer';
 import { getFileMetadata } from '../lib/metadata';
 import type { FileMetadata, FsEntry } from '../lib/types';
 
@@ -31,8 +32,9 @@ export function DetailsPane({ entry }: DetailsPaneProps) {
       const image = isImage(file.name, file.type) ? await readImageDetails(file) : null;
       if (cancelled) return;
       // A temporary in-memory URL; nothing leaves the browser.
-      if (image) previewUrl = URL.createObjectURL(file);
-      setState({ status: 'ready', loaded: { previewUrl, metadata: getFileMetadata(file), image, media: classifyMedia(file.name, file.type) } });
+      const media = classifyMedia(file.name, file.type);
+      if (image || media === 'supported-video' || media === 'supported-audio') previewUrl = URL.createObjectURL(file);
+      setState({ status: 'ready', loaded: { previewUrl, metadata: getFileMetadata(file), image, media } });
     })().catch((e: unknown) => {
       if (!cancelled) setState({ status: 'error', message: e instanceof Error ? e.message : 'Could not read this file.' });
     });
@@ -62,7 +64,12 @@ export function DetailsPane({ entry }: DetailsPaneProps) {
   return (
     <div className="details-body">
       <h2 className="details-title">{metadata.name}</h2>
-      {previewUrl && (
+      {previewUrl && (media === 'supported-video' || media === 'supported-audio') && (
+        <div className="preview">
+          <MediaPlayer kind={media === 'supported-video' ? 'video' : 'audio'} url={previewUrl} name={metadata.name} />
+        </div>
+      )}
+      {previewUrl && image && (
         <div className="preview">
           <img src={previewUrl} alt={metadata.name} />
         </div>

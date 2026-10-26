@@ -283,3 +283,16 @@ body {
 .name-filter-stale {
   opacity: 0.5;
 }
+
+.media-video {
+  display: block;
+  max-width: 100%;
+  max-height: var(--preview-max-height);
+  color-scheme: light dark;
+}
+
+.media-audio {
+  display: block;
+  width: 100%;
+  color-scheme: light dark;
+}
