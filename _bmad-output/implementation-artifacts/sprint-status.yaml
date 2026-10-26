@@ -30,15 +30,47 @@
 # Timestamps use MM-DD-YYYY HH:MM.
 
 generated: 10-25-2026 12:00
-last_updated: 10-26-2026 13:00
+last_updated: 10-26-2026 17:09
 project: file-browser
 project_key: NOKEY
 tracking_system: file-system
 story_location: "_bmad-output/implementation-artifacts"
 
 development_status:
-  epic-1: in-progress
+  epic-1: done
   1-1-recognise-media-files-and-show-clear-messages-for-unsupported-ones: done
   1-2-play-supported-audio-and-video-in-the-preview-box: done
   1-3-show-the-duration-in-the-details-pane: done
-  epic-1-retrospective: optional
+  epic-1-retrospective: done
+action_items:
+  - id: "epic-1-retro-item-1-run-manual-browser-checks-m1-m8-for-stor"
+    epic: 1
+    action: "Run manual browser checks M1-M8 for stories 1.2 and 1.3 and record results"
+    owner: "human reviewer"
+    status: open
+    ref: "_bmad-output/implementation-artifacts/epic-1-retro-2026-10-26.md"
+  - id: "epic-1-retro-item-2-create-or-document-the-missing-spec-for"
+    epic: 1
+    action: "Create or document the missing spec for Story 1.2"
+    owner: "developer"
+    status: open
+    ref: "_bmad-output/implementation-artifacts/epic-1-retro-2026-10-26.md"
+  - id: "epic-1-retro-item-3-add-component-tests-dom-env-dev-tooling"
+    epic: 1
+    action: "Add component tests (DOM env, dev tooling only) with a StrictMode regression
+      test for MediaPlayer"
+    owner: "developer"
+    status: open
+    ref: "_bmad-output/implementation-artifacts/epic-1-retro-2026-10-26.md"
+  - id: "epic-1-retro-item-4-use-full-bmad-build-loop-and-verify-comm"
+    epic: 1
+    action: "Use full bmad-build loop and verify-commit for every story"
+    owner: "team"
+    status: open
+    ref: "_bmad-output/implementation-artifacts/epic-1-retro-2026-10-26.md"
+  - id: "epic-1-retro-item-5-decide-on-loading-timeout-and-sub-1s-dur"
+    epic: 1
+    action: "Decide on Loading timeout and sub-1s duration display"
+    owner: "product owner"
+    status: open
+    ref: "_bmad-output/implementation-artifacts/epic-1-retro-2026-10-26.md"
