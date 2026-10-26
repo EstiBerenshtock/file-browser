@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { formatDate, formatSize, isImage } from '../lib/format';
 import { readImageDetails, type ImageDetails } from '../lib/imageDetails';
 import { classifyMedia, UNSUPPORTED_MEDIA_MESSAGE, type MediaKind } from '../lib/media';
+import { applyDurationReport, durationLabel, type DurationState } from '../lib/duration';
 import { MediaPlayer } from './MediaPlayer';
 import { getFileMetadata } from '../lib/metadata';
 import type { FileMetadata, FsEntry } from '../lib/types';
@@ -22,6 +23,8 @@ type State = { status: 'loading' } | { status: 'error'; message: string } | { st
 /** Render with `key={entry.path}` so every selection starts from a fresh state. */
 export function DetailsPane({ entry }: DetailsPaneProps) {
   const [state, setState] = useState<State>({ status: 'loading' });
+  const [duration, setDuration] = useState<DurationState>({ status: 'loading' });
+  const onDuration = (seconds: number) => setDuration((prev) => applyDurationReport(prev, seconds));
 
   useEffect(() => {
     if (entry.kind !== 'file') return;
@@ -61,12 +64,13 @@ export function DetailsPane({ entry }: DetailsPaneProps) {
   if (state.status === 'error') return <p className="error">{state.message}</p>;
 
   const { previewUrl, metadata, image, media } = state.loaded;
+  const hasPlayer = !!previewUrl && (media === 'supported-video' || media === 'supported-audio');
   return (
     <div className="details-body">
       <h2 className="details-title">{metadata.name}</h2>
-      {previewUrl && (media === 'supported-video' || media === 'supported-audio') && (
+      {hasPlayer && (
         <div className="preview">
-          <MediaPlayer kind={media === 'supported-video' ? 'video' : 'audio'} url={previewUrl} name={metadata.name} />
+          <MediaPlayer kind={media === 'supported-video' ? 'video' : 'audio'} url={previewUrl} name={metadata.name} onDuration={onDuration} />
         </div>
       )}
       {previewUrl && image && (
@@ -85,6 +89,9 @@ export function DetailsPane({ entry }: DetailsPaneProps) {
         <Row label="Name" value={metadata.name} />
         <Row label="Size" value={`${formatSize(metadata.size)} (${metadata.size.toLocaleString()} bytes)`} />
         <Row label="Type" value={metadata.type} />
+        {hasPlayer && (
+          <Row label="Duration" value={durationLabel(duration)} live />
+        )}
         <Row label="Modified" value={formatDate(metadata.lastModified)} />
         {image?.info && <Row label="Dimensions" value={`${image.info.width} × ${image.info.height} px`} />}
       </dl>
@@ -106,11 +113,11 @@ export function DetailsPane({ entry }: DetailsPaneProps) {
   );
 }
 
-function Row({ label, value }: { label: string; value: string }) {
+function Row({ label, value, live }: { label: string; value: string; live?: boolean }) {
   return (
     <>
       <dt>{label}</dt>
-      <dd>{value}</dd>
+      <dd aria-live={live ? 'polite' : undefined}>{value}</dd>
     </>
   );
 }

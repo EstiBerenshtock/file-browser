@@ -30,7 +30,7 @@
 # Timestamps use MM-DD-YYYY HH:MM.
 
 generated: 10-25-2026 12:00
-last_updated: 10-26-2026 12:00
+last_updated: 10-26-2026 13:00
 project: file-browser
 project_key: NOKEY
 tracking_system: file-system
@@ -39,6 +39,6 @@ story_location: "_bmad-output/implementation-artifacts"
 development_status:
   epic-1: in-progress
   1-1-recognise-media-files-and-show-clear-messages-for-unsupported-ones: done
-  1-2-play-supported-audio-and-video-in-the-preview-box: review
-  1-3-show-the-duration-in-the-details-pane: backlog
+  1-2-play-supported-audio-and-video-in-the-preview-box: done
+  1-3-show-the-duration-in-the-details-pane: done
   epic-1-retrospective: optional
