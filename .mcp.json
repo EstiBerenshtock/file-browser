@@ -1,5 +1,13 @@
 {
   "mcpServers": {
+    "file-browser-server": {
+      "type": "stdio",
+      "command": "node",
+      "args": ["--experimental-strip-types", "mcp_servers/file-browser.ts"],
+      "env": { 
+        "THEME": "${THEME:-dark}" 
+      }
+    },
     "context7": {
       "type": "http",
       "url": "https://mcp.context7.com/mcp"
