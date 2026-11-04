@@ -9,12 +9,12 @@ const server=new McpServer({
 
 server.tool(
     "get_supported_file_types",
-    "Get the list of file extensions the filr browser supports",
+    "Get the list of file extensions the file browser supports",
     {
         format: z.enum(["list", "json"]).default("list").describe("The output format")
     },
     async ({format})=>{
-        const types=[".ts", ".css", ".json", ".md", ".png"];
+        const types=[".mp4", ".mov", ".mp3", ".wav"];
 
         const result=format==="json"?JSON.stringify(types):types.join(", ");
 

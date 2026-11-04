@@ -4,9 +4,9 @@ export type MediaKind = 'supported-video' | 'supported-audio' | 'unsupported-med
 
 export const UNSUPPORTED_MEDIA_MESSAGE = 'Format not supported for playback';
 
-const SUPPORTED_VIDEO_EXT = new Set(['mp4', 'mov']);
+export const SUPPORTED_VIDEO_EXT = new Set(['mp4', 'mov']);
 const SUPPORTED_AUDIO_EXT = new Set(['mp3', 'wav']);
-const UNSUPPORTED_EXT = new Set([
+export const UNSUPPORTED_EXT = new Set([
   'mkv', 'avi', 'webm', 'wmv', 'flv', 'm4v', 'mpg', 'mpeg', '3gp', 'ogv', 'mts', 'm2ts',
   'ogg', 'oga', 'flac', 'aac', 'm4a', 'wma', 'aiff', 'aif', 'opus', 'mid', 'midi',
 ]);
