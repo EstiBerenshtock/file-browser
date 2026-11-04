@@ -31,3 +31,17 @@ Browser app for browsing a local folder tree and previewing files (File System A
 - Course slides: `../RavTech · Agentic Engineering — The 8 Levels.html`. Grep it, never read it whole. Homework is on each level's Wrap-up slide.
 - User is a beginner student. Explain simply, one step at a time, and say where to type each command (chat or terminal).
 
+
+## Rule / command / skill / plugin / MCP choices
+
+Pick the lightest tool that works: rule → command → skill → plugin → MCP.
+
+- Rules (`.claude/rules/`): short fixed facts that load by path, e.g. styling with CSS variables, lessons from review bugs.
+- Command: `weekly-summary`. A task I start myself once a week; no logic needed.
+- Skills: `verify-commit` (check + commit), `report-change` (explain changes in Hebrew and wait for approval). Multi-step "how to" that Claude loads by description.
+- Plugin: none. Nothing to share across projects yet.
+- MCP (only when a tool needs outside data):
+  - github: PRs and issues.
+  - context7: up-to-date library docs.
+  - codebase-memory-mcp + code-review-graph: code graph for reviews.
+  - file-browser-server: my own server, practice for the course.
