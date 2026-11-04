@@ -25,3 +25,9 @@ Browser app for browsing a local folder tree and previewing files (File System A
 - In `src/components/`: component names are PascalCase.
 
 <!-- /bmad:context -->
+
+## Tools and choices
+- code-review-graph: in `.mcp.json` the path to the program is the full path on my computer. On another computer, change it to the right path.
+- Course slides: `../RavTech · Agentic Engineering — The 8 Levels.html`. Grep it, never read it whole. Homework is on each level's Wrap-up slide.
+- User is a beginner student. Explain simply, one step at a time, and say where to type each command (chat or terminal).
+
