@@ -1,5 +1,5 @@
 import { useEffect, useState, type KeyboardEvent } from 'react';
-import { isLargeFile } from '../lib/format';
+import { formatSize, isLargeFile } from '../lib/format';
 import type { FileEntry, FsEntry } from '../lib/types';
 
 interface TreeNodeProps {
@@ -11,15 +11,15 @@ interface TreeNodeProps {
 
 type Children = { status: 'idle' } | { status: 'loading' } | { status: 'error'; message: string } | { status: 'ready'; items: FsEntry[] };
 
-function LargeTag({ entry }: { entry: FileEntry }) {
-  const [large, setLarge] = useState(false);
+function FileBadges({ entry }: { entry: FileEntry }) {
+  const [size, setSize] = useState<number | null>(null);
 
   useEffect(() => {
     let cancelled = false;
     entry
       .getFile()
       .then((file) => {
-        if (!cancelled) setLarge(isLargeFile(file.size));
+        if (!cancelled) setSize(file.size);
       })
       .catch(() => {});
     return () => {
@@ -27,7 +27,13 @@ function LargeTag({ entry }: { entry: FileEntry }) {
     };
   }, [entry]);
 
-  return large ? <span className="large-tag">LARGE</span> : null;
+  if (size === null) return null;
+  return (
+    <>
+      {isLargeFile(size) && <span className="large-tag">LARGE</span>}
+      <span className="row-size">{formatSize(size)}</span>
+    </>
+  );
 }
 
 export function TreeNode({ entry, selectedPath, onSelect, defaultExpanded = false }: TreeNodeProps) {
@@ -126,7 +132,7 @@ export function TreeNode({ entry, selectedPath, onSelect, defaultExpanded = fals
             {isDirectory ? '📁' : '📄'}
           </span>
           <span className="row-name">{entry.name || '(unnamed)'}</span>
-          {entry.kind === 'file' && <LargeTag entry={entry} />}
+          {entry.kind === 'file' && <FileBadges entry={entry} />}
         </button>
       </div>
 

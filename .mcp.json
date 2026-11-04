@@ -1,14 +1,43 @@
 {
   "mcpServers": {
+    "file-browser-server": {
+      "type": "stdio",
+      "command": "node",
+      "args": [
+        "--experimental-strip-types",
+        "mcp_servers/file-browser.ts"
+      ],
+      "env": {
+        "THEME": "${THEME:-dark}"
+      }
+    },
     "context7": {
       "type": "http",
       "url": "https://mcp.context7.com/mcp"
     },
+    "github": {
+      "type": "http",
+      "url": "https://api.githubcopilot.com/mcp/",
+      "headers": {
+        "Authorization": "Bearer ${GITHUB_PAT}"
+      }
+    },
     "codebase-memory-mcp": {
       "type": "stdio",
-      "command": "codebase-memory-mcp",
-      "args": [],
+      "command": "cmd",
+      "args": [
+        "/c",
+        "codebase-memory-mcp"
+      ],
       "env": {}
+    },
+    "code-review-graph": {
+      "command": "C:\\Users\\IMOE001\\AppData\\Roaming\\Python\\Python312\\Scripts\\code-review-graph.exe",
+      "args": [
+        "serve"
+      ],
+      "cwd": "C:\\Users\\IMOE001\\Desktop\\לימודים\\AI פיתוח סוכנים\\file-browser",
+      "type": "stdio"
     }
   }
 }
