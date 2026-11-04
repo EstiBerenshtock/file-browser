@@ -12,10 +12,17 @@
       "type": "http",
       "url": "https://mcp.context7.com/mcp"
     },
+    "github": {
+      "type": "http",
+      "url": "https://api.githubcopilot.com/mcp/",
+      "headers": {
+        "Authorization": "Bearer ${GITHUB_PAT}"
+      }
+    },
     "codebase-memory-mcp": {
       "type": "stdio",
-      "command": "codebase-memory-mcp",
-      "args": [],
+      "command": "cmd",
+      "args": ["/c", "codebase-memory-mcp"],
       "env": {}
     }
   }
