@@ -8,7 +8,7 @@ Browser app for browsing a local folder tree and previewing files (File System A
 ## Policy
 
 - Never add a runtime dependency to `package.json` `dependencies`. React is the only exception; use native browser APIs instead. Dev tooling is fine.
-- Reply to the user in simple, easy-to-understand English.
+- Reply to the user in simple, easy-to-understand Hebrew.
 
 ## Where things are
 
